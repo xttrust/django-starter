@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1 class="display-4 text-secondary">{{ welcomeMessage }}</h1>
+
+{% for fruit in fruits %}
+    {% if fruit == "apple" %}
+        <p class="text-success">Apple is in the list</p>
+    {% endif %}
+{% endfor %}
+
+{% if "apple" not in fruits %}
+    <p class="text-danger">Apple is not in the list of fruits</p>
+{% endif %}
+
+{% endblock %}

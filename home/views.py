@@ -9,3 +9,17 @@ def home(request):
         'keywords': 'django, starter, xttrust, django starter template, template',
     }
     return render(request, 'home/home.html')
+
+
+def test(request):
+    welcomeMessage = 'Welcome to the test page'
+    fruits = ('apple', 'banana', 'cherry', 'date', 'elderberry', 'fig', 'grape', 
+              'honeydew', 'kiwi', 'lemon', 'mango', 'nectarine', 'orange', 
+              'pear', 'quince', 'raspberry', 'strawberry', 'tangerine', 'ugli', 'watermelon')
+
+    context = {
+        'welcomeMessage': welcomeMessage,
+        'fruits': fruits,
+    }
+
+    return render(request, 'home/test.html', context)
