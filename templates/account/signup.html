@@ -1,45 +1,235 @@
 {% extends "account/base_entrance.html" %}
 {% load allauth i18n %}
+{% load static %}
+
 {% block head_title %}
-    {% trans "Signup" %}
+    {% trans "Sign Up" %}
 {% endblock head_title %}
-{% block content %}
-    {% element h1 %}
-        {% trans "Sign Up" %}
-    {% endelement %}
-    {% setvar link %}
-        <a href="{{ login_url }}">
-        {% endsetvar %}
-        {% setvar end_link %}
-        </a>
-    {% endsetvar %}
-    {% element p %}
-        {% blocktranslate %}Already have an account? Then please {{ link }}sign in{{ end_link }}.{% endblocktranslate %}
-    {% endelement %}
-    {% if not SOCIALACCOUNT_ONLY %}
-        {% url 'account_signup' as action_url %}
-        {% element form form=form method="post" action=action_url tags="entrance,signup" %}
-            {% slot body %}
-                {% csrf_token %}
-                {% element fields form=form unlabeled=True %}
-                {% endelement %}
-                {{ redirect_field }}
-            {% endslot %}
-            {% slot actions %}
-                {% element button tags="prominent,signup" type="submit" %}
-                    {% trans "Sign Up" %}
-                {% endelement %}
-            {% endslot %}
-        {% endelement %}
-    {% endif %}
-    {% if PASSKEY_SIGNUP_ENABLED %}
-        {% element hr %}
-        {% endelement %}
-        {% element button href=signup_by_passkey_url tags="prominent,signup,outline,primary" %}
-            {% trans "Sign up using a passkey" %}
-        {% endelement %}
-    {% endif %}
-    {% if SOCIALACCOUNT_ENABLED %}
-        {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
-    {% endif %}
-{% endblock content %}
+
+{% block auth_content %}
+<div class="auth-header">
+    <h1><i class="fas fa-user-plus"></i> {% trans "Create Account" %}</h1>
+    <p>{% trans "Join us today and get started" %}</p>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% if not SOCIALACCOUNT_ONLY %}
+    <form method="post" action="{% url 'account_signup' %}" class="auth-form" id="signupForm">
+        {% csrf_token %}
+        
+        {% if form.username %}
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}" class="form-label">
+                <i class="fas fa-user"></i> {{ form.username.label }}
+            </label>
+            <input type="text" 
+                   name="{{ form.username.name }}" 
+                   class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                   id="{{ form.username.id_for_label }}"
+                   placeholder="{% trans 'Choose a unique username' %}"
+                   value="{{ form.username.value|default:'' }}"
+                   required>
+            {% if form.username.errors %}
+                {% for error in form.username.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+            <small class="form-text text-muted">
+                {% trans "Your username will be visible to other users" %}
+            </small>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="{{ form.email.id_for_label }}" class="form-label">
+                <i class="fas fa-envelope"></i> {{ form.email.label }}
+            </label>
+            <input type="email" 
+                   name="{{ form.email.name }}" 
+                   class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                   id="{{ form.email.id_for_label }}"
+                   placeholder="{% trans 'Enter your email address' %}"
+                   value="{{ form.email.value|default:'' }}"
+                   required>
+            {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        {% if form.email2 %}
+        <div class="form-group">
+            <label for="{{ form.email2.id_for_label }}" class="form-label">
+                <i class="fas fa-envelope-circle-check"></i> {{ form.email2.label }}
+            </label>
+            <input type="email" 
+                   name="{{ form.email2.name }}" 
+                   class="form-control {% if form.email2.errors %}is-invalid{% endif %}"
+                   id="{{ form.email2.id_for_label }}"
+                   placeholder="{% trans 'Confirm your email address' %}"
+                   value="{{ form.email2.value|default:'' }}"
+                   required>
+            {% if form.email2.errors %}
+                {% for error in form.email2.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="{{ form.password1.id_for_label }}" class="form-label">
+                <i class="fas fa-lock"></i> {{ form.password1.label }}
+            </label>
+            <div class="position-relative">
+                <input type="password" 
+                       name="{{ form.password1.name }}" 
+                       class="form-control {% if form.password1.errors %}is-invalid{% endif %}"
+                       id="{{ form.password1.id_for_label }}"
+                       placeholder="{% trans 'Create a strong password' %}"
+                       required
+                       onkeyup="checkPasswordStrength(this.value)">
+                <button type="button" class="btn btn-outline-secondary position-absolute" 
+                        style="right: 10px; top: 50%; transform: translateY(-50%); border: none; background: none;"
+                        onclick="togglePassword('{{ form.password1.id_for_label }}', 'toggleIcon1')">
+                    <i class="fas fa-eye" id="toggleIcon1"></i>
+                </button>
+            </div>
+            {% if form.password1.errors %}
+                {% for error in form.password1.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+            <div id="passwordStrength" class="password-strength" style="display: none;"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password2.id_for_label }}" class="form-label">
+                <i class="fas fa-lock-keyhole"></i> {{ form.password2.label }}
+            </label>
+            <div class="position-relative">
+                <input type="password" 
+                       name="{{ form.password2.name }}" 
+                       class="form-control {% if form.password2.errors %}is-invalid{% endif %}"
+                       id="{{ form.password2.id_for_label }}"
+                       placeholder="{% trans 'Confirm your password' %}"
+                       required>
+                <button type="button" class="btn btn-outline-secondary position-absolute" 
+                        style="right: 10px; top: 50%; transform: translateY(-50%); border: none; background: none;"
+                        onclick="togglePassword('{{ form.password2.id_for_label }}', 'toggleIcon2')">
+                    <i class="fas fa-eye" id="toggleIcon2"></i>
+                </button>
+            </div>
+            {% if form.password2.errors %}
+                {% for error in form.password2.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        {{ redirect_field }}
+        
+        <button type="submit" class="auth-btn" id="signupBtn">
+            <i class="fas fa-user-plus"></i> {% trans "Create Account" %}
+        </button>
+    </form>
+
+    <div class="auth-footer">
+        <p>
+            {% trans "Already have an account?" %} 
+            <a href="{% url 'account_login' %}">
+                <i class="fas fa-sign-in-alt"></i> {% trans "Sign in here" %}
+            </a>
+        </p>
+        <p class="small text-muted">
+            {% trans "By creating an account, you agree to our" %} 
+            <a href="#" class="text-decoration-none">{% trans "Terms of Service" %}</a> 
+            {% trans "and" %} 
+            <a href="#" class="text-decoration-none">{% trans "Privacy Policy" %}</a>
+        </p>
+    </div>
+{% endif %}
+
+<script>
+function togglePassword(fieldId, iconId) {
+    const passwordField = document.getElementById(fieldId);
+    const toggleIcon = document.getElementById(iconId);
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordField.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
+
+function checkPasswordStrength(password) {
+    const strengthDiv = document.getElementById('passwordStrength');
+    
+    if (password.length === 0) {
+        strengthDiv.style.display = 'none';
+        return;
+    }
+    
+    strengthDiv.style.display = 'block';
+    
+    let strength = 0;
+    let feedback = [];
+    
+    // Length check
+    if (password.length >= 8) strength += 1;
+    else feedback.push('At least 8 characters');
+    
+    // Uppercase check
+    if (/[A-Z]/.test(password)) strength += 1;
+    else feedback.push('One uppercase letter');
+    
+    // Lowercase check
+    if (/[a-z]/.test(password)) strength += 1;
+    else feedback.push('One lowercase letter');
+    
+    // Number check
+    if (/\d/.test(password)) strength += 1;
+    else feedback.push('One number');
+    
+    // Special character check
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength += 1;
+    else feedback.push('One special character');
+    
+    let message = '';
+    let className = '';
+    
+    if (strength < 3) {
+        message = 'Weak password. Consider adding: ' + feedback.slice(0, 2).join(', ');
+        className = 'weak';
+    } else if (strength < 5) {
+        message = 'Good password. Consider adding: ' + feedback.slice(0, 1).join(', ');
+        className = 'medium';
+    } else {
+        message = 'Strong password! ✓';
+        className = 'strong';
+    }
+    
+    strengthDiv.textContent = message;
+    strengthDiv.className = 'password-strength ' + className;
+}
+
+document.getElementById('signupForm').addEventListener('submit', function() {
+    const btn = document.getElementById('signupBtn');
+    btn.classList.add('btn-loading');
+    btn.disabled = true;
+});
+</script>
+{% endblock %}

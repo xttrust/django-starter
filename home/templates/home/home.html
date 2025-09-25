@@ -4,26 +4,166 @@
 {% block extra_css %}
 <style>
     .hero-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 100px 0;
+        background: linear-gradient(135deg, #222831 0%, #393E46 50%, #00ADB5 100%);
+        color: #EEEEEE;
+        padding: 120px 0;
         text-align: center;
+        position: relative;
+        overflow: hidden;
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
     }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 30% 70%, rgba(0, 173, 181, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 30%, rgba(0, 173, 181, 0.1) 0%, transparent 50%);
+        animation: heroGlow 4s ease-in-out infinite alternate;
+    }
+    
+    @keyframes heroGlow {
+        0% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .hero-section h1 {
+        animation: fadeInUp 1s ease-out;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .hero-section .lead {
+        animation: fadeInUp 1s ease-out 0.2s both;
+        color: #B0B0B0;
+    }
+    
+    .hero-buttons {
+        animation: fadeInUp 1s ease-out 0.4s both;
+    }
+    
+    @keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
     .feature-card {
-        transition: transform 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(135deg, #EEEEEE 0%, #F8F9FA 100%);
     }
+    
     .feature-card:hover {
-        transform: translateY(-5px);
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 173, 181, 0.15);
+        border: 1px solid rgba(0, 173, 181, 0.3);
+    }
+    
+    .feature-card .card-body {
+        padding: 2rem;
+    }
+    
+    .feature-card i {
+        color: #00ADB5 !important;
+        transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover i {
+        transform: scale(1.2) rotate(5deg);
+    }
+    
+    .btn-hero-primary {
+        background: linear-gradient(135deg, #00ADB5 0%, #00949a 100%);
+        border: none;
+        color: #222831;
+        padding: 15px 30px;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-hero-primary::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s;
+    }
+    
+    .btn-hero-primary:hover::before {
+        left: 100%;
+    }
+    
+    .btn-hero-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(0, 173, 181, 0.4);
+        color: #222831;
+    }
+    
+    .btn-hero-outline {
+        border: 2px solid #EEEEEE;
+        color: #EEEEEE;
+        padding: 13px 28px;
+        font-weight: 600;
+        border-radius: 50px;
+        background: transparent;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .btn-hero-outline:hover {
+        background: #EEEEEE;
+        color: #222831;
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(238, 238, 238, 0.2);
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="hero-section">
-    <div class="container">
-        <h1 class="display-4 mb-4">Welcome to Django Starter</h1>
-        <p class="lead mb-4">A modern Django project template with Bootstrap, Allauth, and best practices</p>
-        <a href="#features" class="btn btn-light btn-lg">Learn More</a>
+    <div class="container hero-content">
+        {% if user.is_authenticated %}
+            <h1 class="display-4 mb-4 animate__animated animate__fadeInDown">Welcome back, {{ user.get_username }}!</h1>
+            <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s">Ready to build something amazing with Django?</p>
+            <div class="hero-buttons animate__animated animate__fadeInUp animate__delay-2s">
+                <a href="#features" class="btn btn-hero-primary btn-lg">
+                    <i class="fas fa-rocket me-2"></i> Explore Features
+                </a>
+            </div>
+        {% else %}
+            <h1 class="display-3 mb-4 animate__animated animate__fadeInDown">Welcome to Django Starter</h1>
+            <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s">A modern Django project template with Bootstrap, Allauth, and best practices built for the future</p>
+            <div class="hero-buttons d-flex gap-3 justify-content-center animate__animated animate__fadeInUp animate__delay-2s">
+                <a href="{% url 'account_signup' %}" class="btn btn-hero-primary btn-lg">
+                    <i class="fas fa-user-plus me-2"></i> Get Started
+                </a>
+                <a href="#features" class="btn btn-hero-outline btn-lg">
+                    <i class="fas fa-info-circle me-2"></i> Learn More
+                </a>
+            </div>
+        {% endif %}
     </div>
 </div>
 

@@ -1,61 +1,126 @@
 {% extends "account/base_entrance.html" %}
 {% load i18n %}
 {% load allauth account %}
+{% load static %}
+
 {% block head_title %}
     {% trans "Sign In" %}
 {% endblock head_title %}
-{% block content %}
-    {% element h1 %}
-        {% trans "Sign In" %}
-    {% endelement %}
-    {% if not SOCIALACCOUNT_ONLY %}
-        {% setvar link %}
-            <a href="{{ signup_url }}">
-            {% endsetvar %}
-            {% setvar end_link %}
+
+{% block auth_content %}
+<div class="auth-header">
+    <h1><i class="fas fa-sign-in-alt"></i> {% trans "Welcome Back" %}</h1>
+    <p>{% trans "Sign in to your account to continue" %}</p>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% if not SOCIALACCOUNT_ONLY %}
+    <form method="post" action="{% url 'account_login' %}" class="auth-form" id="loginForm">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.login.id_for_label }}" class="form-label">
+                <i class="fas fa-user"></i> {{ form.login.label }}
+            </label>
+            <input type="{{ form.login.field.widget.input_type }}" 
+                   name="{{ form.login.name }}" 
+                   class="form-control {% if form.login.errors %}is-invalid{% endif %}"
+                   id="{{ form.login.id_for_label }}"
+                   placeholder="{% trans 'Enter your email or username' %}"
+                   value="{{ form.login.value|default:'' }}"
+                   required>
+            {% if form.login.errors %}
+                {% for error in form.login.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}" class="form-label">
+                <i class="fas fa-lock"></i> {{ form.password.label }}
+            </label>
+            <div class="position-relative">
+                <input type="password" 
+                       name="{{ form.password.name }}" 
+                       class="form-control {% if form.password.errors %}is-invalid{% endif %}"
+                       id="{{ form.password.id_for_label }}"
+                       placeholder="{% trans 'Enter your password' %}"
+                       required>
+                <button type="button" class="btn btn-outline-secondary position-absolute" 
+                        style="right: 10px; top: 50%; transform: translateY(-50%); border: none; background: none;"
+                        onclick="togglePassword('{{ form.password.id_for_label }}')">
+                    <i class="fas fa-eye" id="toggleIcon"></i>
+                </button>
+            </div>
+            {% if form.password.errors %}
+                {% for error in form.password.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        {% if form.remember %}
+            <div class="form-check mb-3">
+                <input type="checkbox" name="{{ form.remember.name }}" class="form-check-input" 
+                       id="{{ form.remember.id_for_label }}"
+                       {% if form.remember.value %}checked{% endif %}>
+                <label class="form-check-label" for="{{ form.remember.id_for_label }}">
+                    {{ form.remember.label }}
+                </label>
+            </div>
+        {% endif %}
+
+        {{ redirect_field }}
+        
+        <button type="submit" class="auth-btn" id="loginBtn">
+            <i class="fas fa-sign-in-alt"></i> {% trans "Sign In" %}
+        </button>
+    </form>
+
+    <div class="auth-footer">
+        <p>
+            <a href="{% url 'account_reset_password' %}">
+                <i class="fas fa-key"></i> {% trans "Forgot your password?" %}
             </a>
-        {% endsetvar %}
-        {% element p %}
-            {% blocktranslate %}If you have not created an account yet, then please {{ link }}sign up{{ end_link }} first.{% endblocktranslate %}
-        {% endelement %}
-        {% url 'account_login' as login_url %}
-        {% element form form=form method="post" action=login_url tags="entrance,login" %}
-            {% slot body %}
-                {% csrf_token %}
-                {% element fields form=form unlabeled=True %}
-                {% endelement %}
-                {{ redirect_field }}
-            {% endslot %}
-            {% slot actions %}
-                {% element button type="submit" tags="prominent,login" %}
-                    {% trans "Sign In" %}
-                {% endelement %}
-            {% endslot %}
-        {% endelement %}
-    {% endif %}
-    {% if LOGIN_BY_CODE_ENABLED or PASSKEY_LOGIN_ENABLED %}
-        {% element hr %}
-        {% endelement %}
-        {% element button_group vertical=True %}
-            {% if PASSKEY_LOGIN_ENABLED %}
-                {% element button type="submit" form="mfa_login" id="passkey_login" tags="prominent,login,outline,primary" %}
-                    {% trans "Sign in with a passkey" %}
-                {% endelement %}
-            {% endif %}
-            {% if LOGIN_BY_CODE_ENABLED %}
-                {% element button href=request_login_code_url tags="prominent,login,outline,primary" %}
-                    {% trans "Mail me a sign-in code" %}
-                {% endelement %}
-            {% endif %}
-        {% endelement %}
-    {% endif %}
-    {% if SOCIALACCOUNT_ENABLED %}
-        {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
-    {% endif %}
-{% endblock content %}
-{% block extra_body %}
-    {{ block.super }}
-    {% if PASSKEY_LOGIN_ENABLED %}
-        {% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}
-    {% endif %}
+        </p>
+        <p>
+            {% trans "Don't have an account?" %} 
+            <a href="{% url 'account_signup' %}">
+                <i class="fas fa-user-plus"></i> {% trans "Sign up here" %}
+            </a>
+        </p>
+    </div>
+{% endif %}
+
+<script>
+function togglePassword(fieldId) {
+    const passwordField = document.getElementById(fieldId);
+    const toggleIcon = document.getElementById('toggleIcon');
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordField.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
+
+document.getElementById('loginForm').addEventListener('submit', function() {
+    const btn = document.getElementById('loginBtn');
+    btn.classList.add('btn-loading');
+    btn.disabled = true;
+});
+</script>
 {% endblock %}

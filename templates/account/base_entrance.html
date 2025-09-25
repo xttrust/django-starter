@@ -1,1 +1,15 @@
-{% extends "allauth/layouts/entrance.html" %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        {% block auth_content %}
+        {% endblock %}
+    </div>
+</div>
+{% endblock %}
