@@ -8,7 +8,7 @@ def home(request):
         'metaDescription': 'Django Starter is a Python-based starter template designed to accelerate your next project with Django.',
         'keywords': 'django, starter, xttrust, django starter template, template',
     }
-    return render(request, 'home/home.html')
+    return render(request, 'home/home.html', context)
 
 
 def test(request):

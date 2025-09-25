@@ -1,6 +1,64 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 100px 0;
+        text-align: center;
+    }
+    .feature-card {
+        transition: transform 0.3s ease;
+    }
+    .feature-card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<h1 class="display-4 text-success">Homepage</h1>
+<div class="hero-section">
+    <div class="container">
+        <h1 class="display-4 mb-4">Welcome to Django Starter</h1>
+        <p class="lead mb-4">A modern Django project template with Bootstrap, Allauth, and best practices</p>
+        <a href="#features" class="btn btn-light btn-lg">Learn More</a>
+    </div>
+</div>
+
+<div class="container my-5">
+    <section id="features">
+        <h2 class="text-center mb-5">Features</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-shield fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Authentication</h5>
+                        <p class="card-text">Built-in user authentication with Django Allauth including social login support.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-mobile-alt fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">Responsive Design</h5>
+                        <p class="card-text">Bootstrap-powered responsive design that looks great on all devices.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-rocket fa-3x text-warning mb-3"></i>
+                        <h5 class="card-title">Ready to Deploy</h5>
+                        <p class="card-text">Configured for easy deployment with Gunicorn and production-ready settings.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
 {% endblock %}
