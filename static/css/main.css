@@ -565,6 +565,7 @@ main {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    z-index: 1;
 }
 
 .footer-badge::before {
@@ -577,7 +578,7 @@ main {
     background: linear-gradient(135deg, var(--accent-cyan), #00949a);
     opacity: 0;
     transition: opacity 0.3s ease;
-    z-index: 0;
+    z-index: -1;
 }
 
 .footer-badge:hover::before {
@@ -586,18 +587,29 @@ main {
 
 .footer-badge:hover {
     border-color: var(--accent-cyan);
-    color: var(--dark-primary);
+    color: var(--dark-primary) !important;
     transform: translateY(-2px) scale(1.05);
     box-shadow: 0 10px 25px rgba(0, 173, 181, 0.2);
 }
 
-.footer-badge span {
+.footer-badge i {
+    margin-right: 5px;
     position: relative;
     z-index: 1;
 }
 
-.footer-badge i {
-    margin-right: 5px;
+.footer-badge:hover i {
+    color: var(--dark-primary) !important;
+}
+
+/* Ensure all text content is visible on hover */
+.footer-badge {
+    display: inline-flex;
+    align-items: center;
+}
+
+.footer-badge:hover * {
+    color: var(--dark-primary) !important;
 }
 
 .footer-bottom {
