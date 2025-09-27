@@ -248,11 +248,13 @@ The footer includes a newsletter signup form that demonstrates form handling:
 - **Console Logging**: For development purposes, submitted emails are logged to the browser console
 
 **📝 Development Note**: The newsletter form currently outputs data to the browser console (`console.log('Newsletter signup:', email)`). In production, you would replace this with:
+
 - Database storage (create a `Newsletter` model)
 - Email service integration (Mailchimp, SendGrid, etc.)
 - API endpoint for handling subscriptions
 
 **🔧 To see newsletter data:**
+
 1. Open your browser's Developer Tools (F12)
 2. Go to the Console tab
 3. Submit an email through the footer newsletter form
@@ -384,6 +386,90 @@ Don't forget to add your app to `INSTALLED_APPS` in `settings.py`.
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 🐳 Docker Deployment
+
+### Prerequisites
+
+- Docker Engine 20.10+
+- Docker Compose v2.0+
+
+### Quick Docker Setup
+
+```bash
+# Clone repository
+git clone https://github.com/xttrust/django-starter.git
+cd django-starter
+
+# Build and start containers
+docker-compose up --build
+
+# Access application
+open http://localhost:8000
+```
+
+> 📖 **New to Docker?** Check out our comprehensive [Docker Development Guide for Beginners](docs/docker-development-guide.md) that explains everything step-by-step!
+
+### Docker Services
+
+| Service | Port | Description |
+|---------|------|-------------|
+| **web** | 8000 | Django application (Gunicorn) |
+| **db** | 5432 | PostgreSQL database |
+| **redis** | 6379 | Redis cache/sessions |
+| **nginx** | 80 | Reverse proxy (production) |
+
+### Development Commands
+
+```bash
+# Start services in background
+docker-compose up -d
+
+# View logs
+docker-compose logs -f web
+
+# Run Django commands
+docker-compose exec web python manage.py migrate
+docker-compose exec web python manage.py createsuperuser
+docker-compose exec web python manage.py collectstatic
+
+# Access database
+docker-compose exec db psql -U django_user -d django_starter
+
+# Stop services
+docker-compose down
+
+# Rebuild containers
+docker-compose up --build --force-recreate
+```
+
+### Production Deployment
+
+```bash
+# Use production compose file
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+# Or set environment variables
+export DEBUG=0
+export SECRET_KEY=your-production-secret-key
+docker-compose up -d
+```
+
+### Environment Variables
+
+Create `.env` file from `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+Key variables:
+
+- `DEBUG`: Set to `0` for production
+- `SECRET_KEY`: Use strong secret key
+- `DATABASE_URL`: PostgreSQL connection string
+- `REDIS_URL`: Redis connection string
+- `ALLOWED_HOSTS`: Comma-separated domain list
+
 ## 🆘 Support
 
 If you encounter any issues or have questions:
@@ -391,6 +477,7 @@ If you encounter any issues or have questions:
 - Create an issue on GitHub
 - Check the Django documentation: <https://docs.djangoproject.com/>
 - Review Allauth documentation: <https://django-allauth.readthedocs.io/>
+- Docker documentation: <https://docs.docker.com/>
 
 ## 🙏 Acknowledgments
 
@@ -398,6 +485,7 @@ If you encounter any issues or have questions:
 - Django Allauth contributors for authentication solutions
 - Bootstrap team for responsive design components
 - Font Awesome for comprehensive icon library
+- Docker team for containerization platform
 
 ---
 
