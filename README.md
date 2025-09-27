@@ -55,13 +55,55 @@ python manage.py runserver
 
 </div>
 
+## 📚 Documentation
+
+Complete guides for every development scenario:
+
+| Guide | Description | Best For |
+|-------|-------------|----------|
+| 📖 **[Documentation Index](docs/README.md)** | **Start here** - Complete guide navigator | Everyone |
+| 💻 **[Local Development](docs/local-development-guide.md)** | Simple setup with SQLite | Beginners, Quick development |
+| 🐳 **[Docker Development](docs/docker-development-guide.md)** | Production-like containerized environment | Team development, Production testing |
+| 🔄 **[Environment Switching](docs/environment-switching-guide.md)** | Easy switching between local and Docker | Daily development workflow |
+| ⚡ **[Docker Quick Reference](docs/docker-quick-reference.md)** | Command cheat sheet | Docker power users |
+
+### 🎯 Quick Start Options
+
+#### 💻 Local Development (Recommended for beginners)
+```bash
+git clone https://github.com/xttrust/django-starter.git
+cd django-starter
+.\switch-to-local.bat  # Automatically configures local environment
+python -m venv .venv && .venv\Scripts\activate
+pip install -r requirements.txt && python manage.py migrate
+python manage.py runserver  # → http://127.0.0.1:8000
+```
+
+#### 🐳 Docker Development (Recommended for teams)
+```bash
+git clone https://github.com/xttrust/django-starter.git
+cd django-starter
+.\switch-to-docker.bat  # Automatically configures Docker environment
+docker-compose up --build  # → http://localhost:8000
+```
+
+> **💡 Tip:** Use the switching scripts to easily move between development modes! See the [Environment Switching Guide](docs/environment-switching-guide.md) for details.
+
 ## ✨ Features
 
 ### 🔧 Core Framework
 
 - **Django 5.1.2**: Latest stable Django framework with enhanced performance and security
 - **Python 3.13+**: Modern Python version with improved performance and features
-- **SQLite**: Default database for development (easily configurable for PostgreSQL, MySQL, etc.)
+- **Flexible Database**: SQLite for local development, PostgreSQL for Docker/production
+
+### 🐳 Docker & Production
+
+- **Multi-Container Setup**: Django + PostgreSQL + Redis + Nginx
+- **Production Ready**: Gunicorn WSGI server with proper configuration
+- **Health Checks**: Container health monitoring and auto-restart
+- **Static Files**: Automated collection and serving via Nginx
+- **Environment Switching**: Easy toggle between local and Docker development
 
 ### 🔐 Authentication & Security
 
@@ -109,51 +151,90 @@ sqlparse==0.5.1
 tzdata==2024.2
 ```
 
-## 🚀 Quick Start
+## � Environment Management
 
-### 1. Clone the Repository
+### Automated Environment Switching
+
+Switch between local (SQLite) and Docker (PostgreSQL) development with one click:
+
+| Script | Environment | Database | Purpose |
+|--------|-------------|----------|---------|
+| `switch-to-local.bat` | Local Development | SQLite | Fast development, debugging |
+| `switch-to-docker.bat` | Docker Development | PostgreSQL | Production-like testing |
 
 ```bash
+# Switch to local development
+.\switch-to-local.bat
+
+# Switch to Docker development  
+.\switch-to-docker.bat
+```
+
+**What the scripts do:**
+- ✅ Automatically configure environment variables
+- ✅ Backup existing database (Docker mode)
+- ✅ Switch database settings
+- ✅ Provide clear next steps
+
+> 📖 **Detailed Guide**: See [Environment Switching Guide](docs/environment-switching-guide.md) for complete workflows and troubleshooting.
+
+## 🚀 Development Setup
+
+### Option 1: Local Development (Recommended for beginners)
+
+**Perfect for learning Django and rapid prototyping.**
+
+```bash
+# 1. Clone and setup
 git clone https://github.com/xttrust/django-starter.git
 cd django-starter
-```
 
-### 2. Set Up Virtual Environment
+# 2. Switch to local environment
+.\switch-to-local.bat
 
-```bash
-# Create virtual environment
+# 3. Setup Python environment
 python -m venv .venv
-
-# Activate virtual environment
-# On Windows:
-.\.venv\Scripts\Activate.ps1
-# On macOS/Linux:
-source .venv/bin/activate
-```
-
-### 3. Install Dependencies
-
-```bash
+.\.venv\Scripts\activate
 pip install -r requirements.txt
+
+# 4. Initialize database
+python manage.py migrate
+python manage.py createsuperuser
+
+# 5. Start development server
+python manage.py runserver
+# → Visit: http://127.0.0.1:8000
 ```
 
-### 4. Configure Database
+### Option 2: Docker Development (Recommended for teams)
+
+**Production-like environment with PostgreSQL, Redis, and Nginx.**
 
 ```bash
-# Run initial migrations
-python manage.py migrate
+# 1. Clone and setup
+git clone https://github.com/xttrust/django-starter.git
+cd django-starter
 
-# Create superuser account
-python manage.py createsuperuser
+# 2. Switch to Docker environment
+.\switch-to-docker.bat
+
+# 3. Start containers
+docker-compose up --build -d
+
+# 4. Initialize database (first time only)
+docker-compose exec web python manage.py migrate
+docker-compose exec web python manage.py createsuperuser
+
+# → Visit: http://localhost:8000
 ```
 
-### 5. Development Admin Account
+### Development Admin Account
 
 For **development purposes only**, a default admin account is included:
 
 - **Username**: `admin`
 - **Password**: `@MyLocalSuper`
-- **Access**: Visit `http://127.0.0.1:8000/admin/` to login
+- **Access**: Visit `/admin/` to login
 
 > ⚠️ **SECURITY WARNING**: This is for development only! Always create new admin accounts for production environments with strong, unique passwords.
 
@@ -171,7 +252,83 @@ python manage.py runserver
 
 Visit `http://127.0.0.1:8000/` to see your application running!
 
-## 📁 Project Structure
+## � Docker Deployment
+
+### Production Deployment with Docker
+
+For production deployment, use the Docker setup:
+
+```bash
+# 1. Clone repository
+git clone https://github.com/xttrust/django-starter.git
+cd django-starter
+
+# 2. Configure production environment
+cp .env.example .env
+# Edit .env with your production settings
+
+# 3. Deploy with Docker Compose
+docker-compose -f docker-compose.yml up -d --build
+
+# 4. Initialize production database
+docker-compose exec web python manage.py migrate
+docker-compose exec web python manage.py collectstatic --noinput
+docker-compose exec web python manage.py createsuperuser
+```
+
+### Docker Architecture
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│     Nginx       │    │     Django      │    │   PostgreSQL    │
+│   (Port 8000)   │────│   (Port 8000)   │────│   (Port 5432)   │
+│  Load Balancer  │    │  Gunicorn WSGI  │    │   Database      │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                │
+                       ┌─────────────────┐
+                       │      Redis      │
+                       │   (Port 6379)   │
+                       │     Cache       │
+                       └─────────────────┘
+```
+
+**Features:**
+- **Multi-container orchestration** with health checks
+- **Nginx reverse proxy** for static files and load balancing
+- **PostgreSQL database** with persistent volumes
+- **Redis caching** for sessions and performance
+- **Auto-restart policies** for production reliability
+
+### Environment Configuration
+
+Create a `.env` file for production:
+
+```bash
+# Django Configuration
+DEBUG=False
+SECRET_KEY=your-super-secret-production-key
+ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
+
+# Database (PostgreSQL)
+DB_NAME=django_starter_prod
+DB_USER=postgres
+DB_PASSWORD=secure-database-password
+DB_HOST=db
+DB_PORT=5432
+
+# Redis
+REDIS_URL=redis://redis:6379/1
+
+# Email (for production)
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.your-email-provider.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=your-email@yourdomain.com
+EMAIL_HOST_PASSWORD=your-email-password
+```
+
+## �📁 Project Structure
 
 ```bash
 django-starter/

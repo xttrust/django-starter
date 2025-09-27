@@ -12,8 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
-from decouple import config # type: ignore
-import dj_database_url # type: ignore
+from decouple import config
+import dj_database_url
 
 from django.conf.global_settings import EMAIL_BACKEND, LOGIN_URL, LOGIN_REDIRECT_URL
 

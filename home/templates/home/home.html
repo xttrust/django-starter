@@ -138,6 +138,63 @@
         transform: translateY(-3px);
         box-shadow: 0 15px 35px rgba(238, 238, 238, 0.2);
     }
+
+    /* Docker section styles */
+    #docker {
+        border: 1px solid rgba(0, 173, 181, 0.1);
+    }
+
+    #docker pre {
+        background: transparent !important;
+        border: none;
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    #docker code {
+        color: #00ADB5 !important;
+    }
+
+    /* Tech stack icons */
+    #tech-stack .fab, #tech-stack .fas {
+        width: 20px;
+        text-align: center;
+    }
+
+    /* Hover effects for tech items */
+    #tech-stack li {
+        transition: all 0.3s ease;
+        padding: 8px;
+        border-radius: 8px;
+    }
+
+    #tech-stack li:hover {
+        background: rgba(0, 173, 181, 0.05);
+        transform: translateX(10px);
+    }
+
+    /* Getting Started section */
+    #getting-started .card {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #getting-started .card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 173, 181, 0.2);
+    }
+
+    #getting-started code {
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+    }
+
+    #getting-started .btn {
+        transition: all 0.3s ease;
+    }
+
+    #getting-started .btn:hover {
+        transform: translateY(-2px);
+    }
 </style>
 {% endblock %}
 
@@ -146,15 +203,18 @@
     <div class="container hero-content">
         {% if user.is_authenticated %}
             <h1 class="display-4 mb-4 animate__animated animate__fadeInDown">Welcome back, {{ user.get_username }}!</h1>
-            <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s">Ready to build something amazing with Django?</p>
+            <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s">Your Django app is running with full Docker containerization and modern tooling. Ready to build something amazing?</p>
             <div class="hero-buttons animate__animated animate__fadeInUp animate__delay-2s">
-                <a href="#features" class="btn btn-hero-primary btn-lg">
+                <a href="#docker" class="btn btn-hero-primary btn-lg me-3">
+                    <i class="fab fa-docker me-2"></i> Docker Setup
+                </a>
+                <a href="#features" class="btn btn-hero-outline btn-lg">
                     <i class="fas fa-rocket me-2"></i> Explore Features
                 </a>
             </div>
         {% else %}
-            <h1 class="display-3 mb-4 animate__animated animate__fadeInDown">Welcome to Django Starter</h1>
-            <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s">A modern Django project template with Bootstrap, Allauth, and best practices built for the future</p>
+            <h1 class="display-3 mb-4 animate__animated animate__fadeInDown">Welcome to Django Starter </h1>
+            <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s">Modern Django template with Docker containerization, Bootstrap styling, and production-ready architecture</p>
             <div class="hero-buttons d-flex gap-3 justify-content-center animate__animated animate__fadeInUp animate__delay-2s">
                 <a href="{% url 'account_signup' %}" class="btn btn-hero-primary btn-lg">
                     <i class="fas fa-user-plus me-2"></i> Get Started
@@ -169,34 +229,276 @@
 
 <div class="container my-5">
     <section id="features">
-        <h2 class="text-center mb-5">Features</h2>
+        <h2 class="text-center mb-5">Core Features</h2>
         <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fab fa-docker fa-3x text-info mb-3"></i>
+                        <h5 class="card-title">Docker Ready</h5>
+                        <p class="card-text">Complete containerization with PostgreSQL, Redis, and Nginx. One command setup for development and production.</p>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-4 mb-4">
                 <div class="card feature-card h-100">
                     <div class="card-body text-center">
                         <i class="fas fa-user-shield fa-3x text-primary mb-3"></i>
                         <h5 class="card-title">Authentication</h5>
-                        <p class="card-text">Built-in user authentication with Django Allauth including social login support.</p>
+                        <p class="card-text">Django Allauth with email verification, social login support, and comprehensive user management.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
                 <div class="card feature-card h-100">
                     <div class="card-body text-center">
-                        <i class="fas fa-mobile-alt fa-3x text-success mb-3"></i>
+                        <i class="fas fa-palette fa-3x text-secondary mb-3"></i>
+                        <h5 class="card-title">Modern UI</h5>
+                        <p class="card-text">Dark theme with cyan accents, glass morphism effects, and smooth animations powered by Bootstrap 5.3.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-database fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">Smart Database</h5>
+                        <p class="card-text">Auto-detects environment: SQLite for local development, PostgreSQL for Docker/production.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-mobile-alt fa-3x text-warning mb-3"></i>
                         <h5 class="card-title">Responsive Design</h5>
-                        <p class="card-text">Bootstrap-powered responsive design that looks great on all devices.</p>
+                        <p class="card-text">Mobile-first responsive design with custom CSS animations and optimized performance.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
                 <div class="card feature-card h-100">
                     <div class="card-body text-center">
-                        <i class="fas fa-rocket fa-3x text-warning mb-3"></i>
-                        <h5 class="card-title">Ready to Deploy</h5>
-                        <p class="card-text">Configured for easy deployment with Gunicorn and production-ready settings.</p>
+                        <i class="fas fa-rocket fa-3x text-danger mb-3"></i>
+                        <h5 class="card-title">Production Ready</h5>
+                        <p class="card-text">Gunicorn, WhiteNoise, security headers, and comprehensive documentation for deployment.</p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Docker Section -->
+    <section id="docker" class="my-5 py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 20px;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="mb-4">
+                        <i class="fab fa-docker text-info me-3"></i>
+                        Docker Containerization
+                    </h2>
+                    <p class="lead mb-4">Get up and running in seconds with our complete Docker setup!</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-server text-info me-3"></i>
+                                <div>
+                                    <h6 class="mb-1">Multi-Container Stack</h6>
+                                    <small class="text-muted">Django + PostgreSQL + Redis + Nginx</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-sync-alt text-info me-3"></i>
+                                <div>
+                                    <h6 class="mb-1">Live Reload</h6>
+                                    <small class="text-muted">Code changes without restarts</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-heartbeat text-info me-3"></i>
+                                <div>
+                                    <h6 class="mb-1">Health Checks</h6>
+                                    <small class="text-muted">Automatic service monitoring</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-book text-info me-3"></i>
+                                <div>
+                                    <h6 class="mb-1">Beginner Docs</h6>
+                                    <small class="text-muted">4000+ word comprehensive guide</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="bg-dark text-light p-4 rounded-3 shadow">
+                        <h6 class="text-info mb-3">
+                            <i class="fas fa-terminal me-2"></i>Quick Start
+                        </h6>
+                        <pre class="text-light mb-0"><code># Clone and start everything
+git clone https://github.com/xttrust/django-starter.git
+cd django-starter
+docker-compose up --build
+
+# That's it! 🚀
+# Visit: http://localhost:8000</code></pre>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="bg-white p-3 rounded shadow-sm">
+                                    <i class="fab fa-python text-warning fa-2x"></i>
+                                    <div class="mt-2 small">Python 3.13</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="bg-white p-3 rounded shadow-sm">
+                                    <i class="fas fa-leaf text-success fa-2x"></i>
+                                    <div class="mt-2 small">Django 5.1.2</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="bg-white p-3 rounded shadow-sm">
+                                    <i class="fab fa-docker text-info fa-2x"></i>
+                                    <div class="mt-2 small">Container Ready</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Stack -->
+    <section id="tech-stack" class="my-5">
+        <h2 class="text-center mb-5">Technical Stack</h2>
+        <div class="row">
+            <div class="col-lg-6">
+                <h4 class="mb-3">
+                    <i class="fas fa-code text-primary me-2"></i>
+                    Development Stack
+                </h4>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fab fa-python text-warning me-2"></i> <strong>Python 3.13+</strong> - Latest performance improvements</li>
+                    <li class="mb-2"><i class="fas fa-leaf text-success me-2"></i> <strong>Django 5.1.2</strong> - Latest stable framework</li>
+                    <li class="mb-2"><i class="fab fa-bootstrap text-primary me-2"></i> <strong>Bootstrap 5.3.3</strong> - Modern responsive framework</li>
+                    <li class="mb-2"><i class="fas fa-magic text-info me-2"></i> <strong>Animate.css 4.1.1</strong> - Smooth animations</li>
+                    <li class="mb-2"><i class="fas fa-icons text-secondary me-2"></i> <strong>Font Awesome 6.6.0</strong> - Comprehensive icons</li>
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <h4 class="mb-3">
+                    <i class="fab fa-docker text-info me-2"></i>
+                    Production Infrastructure
+                </h4>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-database text-primary me-2"></i> <strong>PostgreSQL 16</strong> - Robust database</li>
+                    <li class="mb-2"><i class="fas fa-tachometer-alt text-danger me-2"></i> <strong>Redis 7</strong> - Caching & sessions</li>
+                    <li class="mb-2"><i class="fas fa-server text-success me-2"></i> <strong>Nginx</strong> - High-performance web server</li>
+                    <li class="mb-2"><i class="fas fa-rocket text-warning me-2"></i> <strong>Gunicorn</strong> - WSGI application server</li>
+                    <li class="mb-2"><i class="fas fa-shield-alt text-info me-2"></i> <strong>WhiteNoise</strong> - Static file serving</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Getting Started -->
+    <section id="getting-started" class="my-5 py-5" style="background: linear-gradient(135deg, #222831 0%, #393E46 100%); color: #EEEEEE; border-radius: 20px;">
+        <div class="container">
+            <h2 class="text-center mb-5">
+                <i class="fas fa-play-circle me-3"></i>
+                Choose Your Development Path
+            </h2>
+            
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100" style="background: rgba(238, 238, 238, 0.1); border: 1px solid rgba(0, 173, 181, 0.3); backdrop-filter: blur(10px);">
+                        <div class="card-body text-center">
+                            <i class="fab fa-docker fa-4x text-info mb-3"></i>
+                            <h4 class="text-light mb-3">Docker Development</h4>
+                            <p class="text-light mb-4">Production-like environment with full stack</p>
+                            
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-light">✅ PostgreSQL Database</small>
+                                    <small class="text-light">✅ Redis Caching</small>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-light">✅ Nginx Web Server</small>
+                                    <small class="text-light">✅ Auto-Migrations</small>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-light">✅ Live Code Reload</small>
+                                    <small class="text-light">✅ Team Consistency</small>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-dark p-3 rounded mb-3">
+                                <code class="text-info">docker-compose up --build</code>
+                            </div>
+                            
+                            <a href="https://github.com/xttrust/django-starter/blob/main/docs/docker-development-guide.md" target="_blank" class="btn btn-outline-info">
+                                <i class="fas fa-book me-2"></i>Docker Guide
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100" style="background: rgba(238, 238, 238, 0.1); border: 1px solid rgba(0, 173, 181, 0.3); backdrop-filter: blur(10px);">
+                        <div class="card-body text-center">
+                            <i class="fab fa-python fa-4x text-warning mb-3"></i>
+                            <h4 class="text-light mb-3">Local Development</h4>
+                            <p class="text-light mb-4">Simple setup for quick development</p>
+                            
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-light">✅ SQLite Database</small>
+                                    <small class="text-light">✅ Fast Startup</small>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-light">✅ Direct File Access</small>
+                                    <small class="text-light">✅ Simple Debugging</small>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-light">✅ No Docker Needed</small>
+                                    <small class="text-light">✅ Lightweight</small>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-dark p-3 rounded mb-3">
+                                <code class="text-warning">python manage.py runserver</code>
+                            </div>
+                            
+                            <a href="https://github.com/xttrust/django-starter/blob/main/docs/local-development-guide.md" target="_blank" class="btn btn-outline-warning">
+                                <i class="fas fa-book me-2"></i>Local Guide
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <p class="text-light mb-3">
+                    <i class="fas fa-lightbulb text-warning me-2"></i>
+                    <strong>New to Django or Docker?</strong> Our comprehensive guides include step-by-step tutorials, troubleshooting, and best practices.
+                </p>
+                <a href="https://github.com/xttrust/django-starter" target="_blank" class="btn btn-hero-primary btn-lg me-3">
+                    <i class="fab fa-github me-2"></i>View on GitHub
+                </a>
+                <a href="#features" class="btn btn-hero-outline btn-lg">
+                    <i class="fas fa-arrow-up me-2"></i>Back to Features
+                </a>
             </div>
         </div>
     </section>
