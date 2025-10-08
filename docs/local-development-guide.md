@@ -55,15 +55,17 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Visit: http://127.0.0.1:8000
+Visit: <http://127.0.0.1:8000>
 
 ## Local vs Docker Configuration
 
-### Database Behavior:
+### Database Behavior
+
 - **Local Development**: Uses SQLite (`db.sqlite3` file)
 - **Docker Development**: Uses PostgreSQL container
 
-### How It Works:
+### How It Works
+
 The Django settings automatically detect the environment:
 
 ```python
@@ -80,7 +82,8 @@ else:
 
 ## Switching Between Environments
 
-### To Local Development:
+### To Local Development
+
 ```bash
 # Method 1: Use .env.local
 cp .env.local .env
@@ -90,7 +93,8 @@ python manage.py runserver
 # DATABASE_URL=postgresql://...  # Add # at the beginning
 ```
 
-### Back to Docker:
+### Back to Docker
+
 ```bash
 # Restore .env for Docker
 cp .env.example .env
@@ -99,9 +103,10 @@ docker-compose up -d
 
 ## Troubleshooting Local Development
 
-### Common Issues:
+### Common Issues
 
 1. **"No module named 'django'"**
+
    ```bash
    # Activate virtual environment first
    .\.venv\Scripts\Activate.ps1  # Windows
@@ -109,18 +114,21 @@ docker-compose up -d
    ```
 
 2. **"could not translate host name 'db'"**
+
    ```bash
    # DATABASE_URL is set but Docker isn't running
    # Comment out DATABASE_URL in .env file
    ```
 
 3. **"No such table" errors**
+
    ```bash
    # Run migrations for SQLite
    python manage.py migrate
    ```
 
 4. **Static files not loading**
+
    ```bash
    # Collect static files
    python manage.py collectstatic
@@ -128,13 +136,15 @@ docker-compose up -d
 
 ## Benefits of Each Approach
 
-### Local Development:
+### Local Development
+
 - ✅ Faster startup
 - ✅ Simpler debugging
 - ✅ No Docker overhead
 - ✅ Direct file access
 
-### Docker Development:
+### Docker Development
+
 - ✅ Production-like environment
 - ✅ Consistent across team
 - ✅ Full stack (PostgreSQL + Redis)

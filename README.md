@@ -395,6 +395,21 @@ django-starter/
 - **Newsletter Integration**: Email collection with console logging
 - **Progressive Enhancement**: Graceful degradation for better accessibility
 
+### 📦 UI Kit Component Status (Implemented)
+
+The UI Kit located under `themes/ui-kit/` ships with a comprehensive set of themed demo components:
+
+- Core Layout & Content: Buttons, Badges, Alerts, Forms, Auth Panels, Navbars, Hero Variants, Pricing Cards, Tables, Timeline, Steps, Footers
+- Structure & Navigation: Accordions, Tabs (simplified styling), Carousels, Mega Menu, Pagination, Breadcrumbs
+- Interactive / Overlay: Tooltips, Popovers, Modals, Offcanvas, Toasts
+- Inputs & Feedback: Range Slider, File Upload (drag & drop), Spinners, Progress Bars
+- Marketing & Content Blocks: Product Cards, Comparison Table, Blog Cards, Stats, Testimonials Slider, Team Cards, Gallery Mosaic, CTA Banners, Feature Grids, Logo Grids, FAQ Blocks, Newsletter Boxes
+- Utilities: Elevation / Hover effects, Glass / Gradient utilities, Scroll To Top, Theme Toggle (light/dark) persistence, Spacing & Width helpers
+- Engagement & UX: Floating Action Button (FAB), Share Icon Set, Cookie Consent Banner (localStorage persistence)
+
+Newly added components in the latest batch (Product Cards, Comparison Table, Blog Cards, FAB, Share Icons, Cookie Banner) are fully implemented with dark/light theme support and accessible markup. Tab styles were cleaned up to remove duplicate CSS and the previous decorative underline pseudo-element for a sleeker look.
+
+
 ### Newsletter Functionality
 
 The footer includes a newsletter signup form that demonstrates form handling:
